@@ -1,2 +1,2 @@
-# Resume-Invaders
+## Resume-Invaders
 An interactive Resume by Kevin Han
