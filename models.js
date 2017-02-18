@@ -3,9 +3,9 @@ function Game() {
 
 	this.ship;
 	this.config = {
-		//put some cool shit here
+		fps: 50,
+		dt: (1/50)
 	};
-
 };
 
 
@@ -36,26 +36,45 @@ Game.prototype.initialize = function(gameBoardTag){
 	
 };
 
+//populate convas with default ship and invader locations
 Game.prototype.populate = function(){
 
 	//Populate board with ship
-	var ctx = this.gameBoard.getContext("2d");
-	ctx.fillStyle = "#ffffff";
-	ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);	
+	this.ctx.fillStyle = "#ffffff";
+	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);	
 
 	//populate board with invaders
-	ctx.font = "bold 24px arial, sans-serif";
+	this.ctx.font = "bold 24px arial, sans-serif";
 	var text = "Hello Galaxy";
-	ctx.fillStyle = "#ffffff";
-
-	ctx.fillText(text, this.defaultInvaderPosition.x, this.defaultInvaderPosition.y )
+	this.ctx.fillStyle = "#ffffff";
+	this.ctx.fillText(text, this.defaultInvaderPosition.x, this.defaultInvaderPosition.y )
 };
 
 
+//start the game current FPS
+Game.prototype.start = function() {
+
+	// start the game loop
+	var game = this;
+	this.intervalId = setInterval(function() { 
+		console.log("hey")
+		game.draw()
+	}, 1000/ this.config.fps)
+};
+
+
+//clears at the start and draws updated location ship or invaders
 Game.prototype.draw = function() {
+	
+	//clear board
 	this.ctx.clearRect(0, 0, this.width, this.height);
 
+	//draw ship in it's location
+	this.ctx.fillStyle = "#fffffff";
+	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size)
 };
+
+
 
 
 
@@ -70,6 +89,7 @@ function Ship(x,y) {
 
 function Missle(x,y) {
 	this.velocity;
+	this.size;
 };
 
 
@@ -81,3 +101,5 @@ function Invader(x,y) {
 	this.bodyText = "";
 
 };
+
+
