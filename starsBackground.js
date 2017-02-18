@@ -96,11 +96,11 @@ Starfield.prototype.draw = function() {
 		ctx.fillRect(star.x, star.y, star.size, star.size)
 	}
 
-	// //draw banner
-	// ctx.font = "bold 24px baskerville, sans-serif";
-	// var welcome = "Kevin Han";
-	// ctx.fillStyle = "#ffffff";
-	// ctx.fillText(welcome, this.width/2.5 ,this.height/9);
+	//draw banner
+	ctx.font = "bold 24px baskerville, sans-serif";
+	var welcome = "Hello Galaxy";
+	ctx.fillStyle = "#ffffff";
+	ctx.fillText(welcome, this.width/2.5 ,this.height/9);
 };
 
 

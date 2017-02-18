@@ -9,7 +9,8 @@ function Game() {
 };
 
 
-//takes in div#gameboard and sets game attributes to reflect 
+//will set up the canvas size and the position for ships and invaders
+//will run the listeners for key strokes
 Game.prototype.initialize = function(gameBoardTag){
 
 	gameBoardTag.height = 600;
@@ -40,6 +41,7 @@ Game.prototype.initialize = function(gameBoardTag){
 
 };
 
+//run inside of initialize function
 Game.prototype.addListeners = function() {
 
 	//save scope for reference
@@ -47,26 +49,36 @@ Game.prototype.addListeners = function() {
 
 		//set up listener for keydowns
     document.addEventListener('keydown', function(event) {
-        
+
         //check for right
         if(event.keyCode === 39) {
         self.ship.x += 3;
-        console.log("right")
+        console.log("swoosh")
         };
 
+        //check for left
         if(event.keyCode === 37) {
         	self.ship.x -=3;
-        	console.log("left")
+        	console.log("schweee")
         };
 
+        //check for up
         if(event.keyCode === 38) {
         	self.ship.y -= 3;
-        	console.log("up")
+        	console.log("vroom")
     		};
+
+    		//check for down
     		if(event.keyCode === 40) {
     			self.ship.y += 3;
-    			console.log("down")
+    			console.log("sqqueaaa")
     		};
+
+    		//check for space bar
+    		if(event.keyCode === 32) {
+    			console.log("pew")
+    		}
+
     }, false);
 
 
@@ -94,7 +106,7 @@ Game.prototype.start = function() {
 	// start the game loop
 	var game = this;
 	this.intervalId = setInterval(function() { 
-		console.log("Frames")
+		// console.log("Frames")
 		game.draw()
 	}, 1000/ this.config.fps)
 };
@@ -122,6 +134,9 @@ function Ship(x,y) {
 	this.y = y;
 	this.x = x;
 	this.size = 16 ;
+	this.fire = function() {
+		
+	};
 
 };
 
