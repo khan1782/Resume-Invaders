@@ -74,13 +74,17 @@ Game.prototype.addListeners = function() {
     			console.log("sqqueaaa")
     		};
 
-    		//check for space bar
-    		if(event.keyCode === 32) {
-    			console.log("pew")
-    		}
 
     }, false);
 
+    document.addEventListener('keyup', function(event) {
+
+    		//check for space bar
+    		if(event.keyCode === 32) {
+    			console.log("pew");
+    			self.ship.fire()
+    		};
+    });
 
 };
 
@@ -108,7 +112,8 @@ Game.prototype.start = function() {
 	this.intervalId = setInterval(function() { 
 		// console.log("Frames")
 		game.draw()
-	}, 1000/ this.config.fps)
+	}, 1000/ this.config.fps);
+
 };
 
 
@@ -121,12 +126,18 @@ Game.prototype.draw = function() {
 	//draw ship in it's location
 	this.ctx.fillStyle = "#fffffff";
 	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
-};
 
-Game.prototype.moveShip = function() {
-	this.ship.x += 1;
-};
+	var self = this;
+	//draw any missiles that have been shot out of the missile bay
+	for(var i=0; i < this.ship.missileBay.length; i++) {
+ 
+		//all missiles will always move foward
+		var currentMissile = self.ship.missileBay[i]
+		currentMissile.y -= 5
+		this.ctx.fillRect(currentMissile.x, currentMissile.y, 1, 20);
 
+		};
+};
 
 
 function Ship(x,y) {
@@ -134,14 +145,20 @@ function Ship(x,y) {
 	this.y = y;
 	this.x = x;
 	this.size = 16 ;
+	this.missileBay = [];
+
+	var self = this;
+
 	this.fire = function() {
-		
+		self.missileBay.push(new Missile(self.x, self.y));
 	};
 
 };
 
 
-function Missle(x,y) {
+function Missile(x,y) {
+	this.x = x;
+	this.y = y;
 	this.velocity;
 	this.size;
 };
