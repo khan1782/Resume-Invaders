@@ -1,6 +1,3 @@
-
-
-
 //starfield constructor
 function Starfield() {
 	this.fps = 30;
@@ -34,8 +31,7 @@ Starfield.prototype.initialize = function(div) {
 	});
 
 	//append canvas to div. set canvas dimension to div dimensions
-	var canvas = document.createElement('canvas');
-	div.appendChild(canvas);
+	var canvas = document.getElementById("starField");
 	this.canvas = canvas;
 	this.canvas.width = this.width;
 	this.canvas.height = this.height;
@@ -99,4 +95,14 @@ Starfield.prototype.draw = function() {
 		var star = this.stars[i];
 		ctx.fillRect(star.x, star.y, star.size, star.size)
 	}
+
+	//draw banner
+	ctx.font = "bold 24px baskerville, sans-serif";
+	var welcome = "Kevin Han";
+	ctx.fillStyle = "#ffffff";
+	ctx.fillText(welcome, this.width/2.5 ,this.height/9);
 };
+
+
+
+
