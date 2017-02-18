@@ -32,7 +32,7 @@ Game.prototype.initialize = function(gameBoardTag){
 
 
 	//set default position for invader
-	this.defaultInvaderPosition = {x:this.width/2, y: this.height/2}
+	this.defaultInvaderPosition = {x:this.width/3, y: this.height/9}
 	
 };
 
