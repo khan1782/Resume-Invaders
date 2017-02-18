@@ -34,7 +34,24 @@ Game.prototype.initialize = function(gameBoardTag){
 	//set default position for invader
 	this.defaultInvaderPosition = {x:this.width/3, y: this.height/9}
 	
+	//add listeners to key presses
+	var game = this;
+	game.addListeners();
+
 };
+
+Game.prototype.addListeners = function() {
+
+	var self = this;
+    document.addEventListener('keydown', function(event) {
+        if(event.keyCode = 39) {
+        self.ship.x += 1;
+        console.log("yo")
+        };
+        
+    }, false);
+};
+
 
 //populate convas with default ship and invader locations
 Game.prototype.populate = function(){
@@ -71,10 +88,12 @@ Game.prototype.draw = function() {
 
 	//draw ship in it's location
 	this.ctx.fillStyle = "#fffffff";
-	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size)
+	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
 };
 
-
+Game.prototype.moveShip = function() {
+	this.ship.x += 1;
+};
 
 
 
