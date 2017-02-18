@@ -42,14 +42,34 @@ Game.prototype.initialize = function(gameBoardTag){
 
 Game.prototype.addListeners = function() {
 
+	//save scope for reference
 	var self = this;
+
+		//set up listener for keydowns
     document.addEventListener('keydown', function(event) {
-        if(event.keyCode = 39) {
-        self.ship.x += 1;
-        console.log("yo")
-        };
         
+        //check for right
+        if(event.keyCode === 39) {
+        self.ship.x += 3;
+        console.log("right")
+        };
+
+        if(event.keyCode === 37) {
+        	self.ship.x -=3;
+        	console.log("left")
+        };
+
+        if(event.keyCode === 38) {
+        	self.ship.y -= 3;
+        	console.log("up")
+    		};
+    		if(event.keyCode === 40) {
+    			self.ship.y += 3;
+    			console.log("down")
+    		};
     }, false);
+
+
 };
 
 
@@ -74,7 +94,7 @@ Game.prototype.start = function() {
 	// start the game loop
 	var game = this;
 	this.intervalId = setInterval(function() { 
-		console.log("hey")
+		console.log("Frames")
 		game.draw()
 	}, 1000/ this.config.fps)
 };
