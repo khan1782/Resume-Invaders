@@ -8,10 +8,14 @@ var starfield = new Starfield();
 starfield.initialize(background);
 starfield.start();
 
-var gameBoard = document.getElementById("gameBoard");
-var game = new Game;
-game.initialize(gameBoard)
 
+//  Setup the canvas.
+var canvas = document.getElementById("gameCanvas");
+
+
+var game = new Game;
+game.initialize(canvas)
+game.populate()
 
 
 });
