@@ -2,6 +2,7 @@
 function Game() {
 
 	this.ship;
+	this.invaders = [];
 	this.config = {
 		fps: 50,
 		dt: (1/50)
@@ -26,14 +27,17 @@ Game.prototype.initialize = function(gameBoardTag){
 	
 
 	//set default position for the ship
-	this.defaultShipPosition = {x: this.width/2.2, y: this.height/1.4}
+	this.defaultShipPosition = {x: this.width/2.2, y: this.height/1.4};
 
 	//create new ship with coordinates
 	this.ship = new Ship(this.defaultShipPosition.x, this.defaultShipPosition.y);
 
 
 	//set default position for invader
-	this.defaultInvaderPosition = {x:this.width/3, y: this.height/9}
+	this.defaultInvaderPosition = {x:this.width/3, y: this.height/6};
+
+	//create new invader with coordinates
+	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, "Hello World"))
 	
 	//add listeners to key presses
 	var game = this;
@@ -97,10 +101,13 @@ Game.prototype.populate = function(){
 	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);	
 
 	//populate board with invaders
-	this.ctx.font = "bold 24px arial, sans-serif";
-	var text = "Hello Galaxy";
-	this.ctx.fillStyle = "#ffffff";
-	this.ctx.fillText(text, this.defaultInvaderPosition.x, this.defaultInvaderPosition.y )
+	for(var i=0; i < this.invaders.length; i++) {
+		var currentInvader = this.invaders[i];
+		this.ctx.font = "bold 24px arial, sans-serif";
+		this.ctx.fillStyle = "#ffffff";
+		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
+	};
+
 };
 
 
@@ -125,17 +132,27 @@ Game.prototype.draw = function() {
 
 	//draw ship in it's location
 	this.ctx.fillStyle = "#fffffff";
+	// console.log(this.ship)
 	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
 
+	//save scope for reference
 	var self = this;
+
+	//draw any existing invaders
+	for(var i=0; i < this.invaders.length; i ++) {
+		var currentInvader = this.invaders[i];
+		console.log(currentInvader)
+		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
+	};
+
 	//draw any missiles that have been shot out of the missile bay
 	for(var i=0; i < this.ship.missileBay.length; i++) {
  
 		//all missiles will always move foward
 		var currentMissile = self.ship.missileBay[i]
 		currentMissile.y -= 5
-		this.ctx.fillRect(currentMissile.x, currentMissile.y, 1, 20);
-
+		this.ctx.fillStyle="#ffffff";
+		this.ctx.fillRect(currentMissile.x, currentMissile.y, 2, 15);
 		};
 };
 
@@ -150,7 +167,7 @@ function Ship(x,y) {
 	var self = this;
 
 	this.fire = function() {
-		self.missileBay.push(new Missile(self.x, self.y));
+		self.missileBay.push(new Missile(self.x + 8, self.y));
 	};
 
 };
@@ -166,11 +183,18 @@ function Missile(x,y) {
 
 
 
-function Invader(x,y) {
+function Invader(x,y, bodyText) {
 	this.x = x;
 	this.y = y;
-	this.bodyText = "";
-
+	this.bodyText = bodyText;
+	
 };
 
 
+
+
+
+//in the initialize
+//set default locatio for an invader
+//create instance of invader
+//update game.populate to
