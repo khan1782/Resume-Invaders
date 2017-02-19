@@ -3,11 +3,17 @@ function Game() {
 
 	this.ship;
 	this.invaders = [];
+	this.stage = 0;
 	this.config = {
 		fps: 50,
 		dt: (1/50)
 	};
-	this.stage = 0;
+	this.keyStrokes = {
+		right: false,
+		left: false,
+		up: false,
+		down: false
+	};
 };
 
 
@@ -41,8 +47,7 @@ Game.prototype.initialize = function(gameBoardTag){
 
 	//add listeners to key presses
 	var game = this;
-	game.addListeners();
-	
+	game.addListeners();	
 };
 
 //run inside of initialize function
@@ -53,63 +58,88 @@ Game.prototype.addListeners = function() {
 
 	//set up listener for keydowns
   document.addEventListener('keydown', function(event) {
-
     //check for right
     if(event.keyCode === 39) {
-
-    	//if the ship is too far right, do nothing, otherwise fly!
-    	if (self.ship.x > self.width -25) {
-    		console.log("EErrrr!")
-    	} else {
-    	self.ship.x += 10;
+    	self.keyStrokes.right = true;
     	console.log("swoosh")
-	    };
-
 	  };
 
     //check for left
     if(event.keyCode === 37) {
-    	if (self.ship.x < 25) {
-    		console.log("Weeee")
-    	} else {
-    	self.ship.x -=10;
-    	console.log("schweee")
-    	};
-  	};
+    	self.keyStrokes.left = true
+    	console.log("schweee");
+    };
 
     //check for up
     if(event.keyCode === 38) {
-    	if (self.ship.y < 30) {
-    		console.log("woohh")
-    	} else {
-    	self.ship.y -= 10;
-    	console.log("vroom")
-			};
+    	self.keyStrokes.up = true;
+
 		};
 
 		//check for down
 		if(event.keyCode === 40) {
-			if (self.ship.y > self.height - 25) {
-				console.log("wreeeee")
-			} else {
-			self.ship.y += 10;
-			console.log("sqqueaaa")
-			};
+			self.keyStrokes.down = true;
 		};
 
   	}, false);
 
   document.addEventListener('keyup', function(event) {
 
-  		//check for space bar
-  		if(event.keyCode === 32) {
-  			console.log("pew");
-  			self.ship.fire()
-  		};
+		//check for space bar
+		if(event.keyCode === 32) {
+			console.log("pew");
+			self.ship.fire()
+		};
+
+  	//check for right
+    if(event.keyCode === 39) {
+    	self.keyStrokes.right = false;
+	  };
+	  if(event.keyCode === 37) {
+	  	self.keyStrokes.left = false;
+	  };
+	  if(event.keyCode === 38) {
+	  	self.keyStrokes.up = false;
+	  };
+	  if(event.keyCode === 40) {
+	  	self.keyStrokes.down = false;
+	  };
   });
 
 };
 
+Game.prototype.multipleKeyStrokeDetection = function() {
+	var self = this;
+	if(this.keyStrokes.right === true) {
+		if (self.ship.x > self.width -55) {
+			console.log("schrweee");
+		} else {
+			self.ship.x += 7;
+		};
+	};
+	if(this.keyStrokes.left === true) {
+		if(self.ship.x < 25) {
+    		console.log("Weeee");
+    	} else {
+    		self.ship.x -=7;
+    	};
+	};
+	if(this.keyStrokes.up === true) {
+		if (self.ship.y < 30) {
+    } else {
+    	self.ship.y -= 7;
+    	console.log("vroom");
+		};
+	};
+	if(this.keyStrokes.down === true) {
+		if (self.ship.y > self.height - 25) {
+			console.log("wreeeee")
+		} else {
+			self.ship.y += 7;
+			console.log("sqqueaaa")
+		};
+	}
+};
 //function to wait and listen for any collisions
 Game.prototype.invaderCollisions = function() {
 	var self = this;
@@ -184,6 +214,7 @@ Game.prototype.start = function() {
 		game.draw()
 		game.invaderCollisions();
 		game.invaderSlide();
+		game.multipleKeyStrokeDetection();
 
 		if (game.invaders.length === 0) {
 			game.stage += 1
