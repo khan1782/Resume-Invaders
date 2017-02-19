@@ -96,7 +96,7 @@ Game.prototype.invaderCollisions = function() {
 	var self = this;
 		this.invaders.forEach(function(invader) {
 			self.ship.missileBay.forEach(function(missile){
-				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.width )) {
+				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
 					self.invaders.pop(invader)
 				};
 			});
