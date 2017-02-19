@@ -7,6 +7,7 @@ function Game() {
 		fps: 50,
 		dt: (1/50)
 	};
+	this.stage = 0;
 };
 
 
@@ -36,8 +37,8 @@ Game.prototype.initialize = function(gameBoardTag){
 	this.defaultInvaderPosition = {x:this.width/3, y: this.height/6};
 
 	//create new invader with coordinates
-	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, 60, "Hello"));
-	this.invaders.push(new Invader(this.defaultInvaderPosition.x + 65, this.defaultInvaderPosition.y, 65, "World"));
+	this.wordsToInvaders("Press Space to Begin!")
+
 	//add listeners to key presses
 	var game = this;
 	game.addListeners();
@@ -165,6 +166,7 @@ Game.prototype.populate = function(){
 	for(var i=0; i < this.invaders.length; i++) {
 		var currentInvader = this.invaders[i];
 		this.ctx.font = "bold 24px arial, sans-serif";
+		
 		this.ctx.fillStyle = "#ffffff";
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
@@ -182,6 +184,17 @@ Game.prototype.start = function() {
 		game.draw()
 		game.invaderCollisions();
 		game.invaderSlide();
+
+		if (game.invaders.length === 0) {
+			game.stage += 1
+			if (game.stage === 1) {
+				game.wordsToInvaders("Resume Invaders: An Interactive Resume");
+			} else if (game.stage === 2) {
+				game.wordsToInvaders("by Kevin Han");
+			} else if (game.stage === 3) {
+			};
+		};
+
 	}, 1000/ this.config.fps);
 
 };
@@ -194,9 +207,11 @@ Game.prototype.draw = function() {
 	this.ctx.clearRect(0, 0, this.width, this.height);
 
 	//draw ship in it's location
-	this.ctx.fillStyle = "#fffffff";
-	// console.log(this.ship)
-	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
+	// console.log(this.ship.image)
+	// debugger
+	this.ctx.drawImage(this.ship.image, this.ship.x, this.ship.y)
+	// this.ctx.fillStyle = "#fffffff";
+	// this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
 
 	//save scope for reference
 	var self = this;
@@ -204,6 +219,7 @@ Game.prototype.draw = function() {
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
+		this.ctx.font="30px Futura"
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
 	//draw any missiles that have been shot out of the missile bay
@@ -228,16 +244,15 @@ function Ship(x,y) {
 	this.y = y;
 	this.x = x;
 	this.size = 16 ;
-	this.missileBay = [];
-
+	this.missileBay  =[];
+	this.image = document.getElementById("ship");
 	var self = this;
 
 	this.fire = function() {
-		self.missileBay.push(new Missile(self.x + 8, self.y));
+		self.missileBay.push(new Missile(self.x + 48, self.y));
 	};
 
 };
-
 
 function Missile(x,y) {
 	this.x = x;
@@ -258,27 +273,30 @@ function Invader(x, y, width, bodyText) {
 };
 
 
+Game.prototype.wordsToInvaders = function(sentence) {
+	arrayOfWords = sentence.split(" ");
+	var trackLength = 50
+	var self = this;
+	this.ctx.font="18px Futura"
+
+	for(var i=0; i < arrayOfWords.length; i++) {
+		var currentWord = arrayOfWords[i];
+		var currentWordWidth = (currentWord.length * 14)
+		if(i === 0) { 
+			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord ));
+		} else {
+			var previousWord = arrayOfWords[i-1];
+			var previousWidth = (previousWord.length * 14)
+			trackLength += (previousWidth + 10)
+			// debugger
+			// console.log(trackLength)
+			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord));
+		};
+	};
+
+};
+//feed something an array of words than iterate through
+//and create a new invader, but each invader's x position is the last invader's 
+//x position + that invader's width + buffer  
 
 
-
-
-
-//in the initialize
-//set default locatio for an invader
-//create instance of invader
-//update game.populate to
-
-
-//hyperdrive
-//will need to change the starfields max velocity
-// will need to change star rectangle's size
-// //
-//     interval = setInterval(function() {
-//         countdownElement.firstChild.data = 'You can start your download in ' + (seconds - second) + ' seconds';
-//         if (second >= seconds) {
-//             downloadButton.style.display = 'block';
-//             clearInterval(interval);
-//         }
-
-//         second++;
-//     }, 1000);

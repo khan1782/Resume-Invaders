@@ -1,5 +1,5 @@
-$(document).ready(function() {
-
+document.addEventListener("DOMContentLoaded", function(event) { 
+  
 //identify starfield div container
 var background = document.getElementById('background');
 //initialize new starfield beep beep boop
