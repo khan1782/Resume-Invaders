@@ -24,7 +24,6 @@ Game.prototype.initialize = function(gameBoardTag){
 	this.width = gameBoardTag.width;
 
 	this.height = gameBoardTag.height;
-	
 
 	//set default position for the ship
 	this.defaultShipPosition = {x: this.width/2.2, y: this.height/1.4};
@@ -37,7 +36,7 @@ Game.prototype.initialize = function(gameBoardTag){
 	this.defaultInvaderPosition = {x:this.width/3, y: this.height/6};
 
 	//create new invader with coordinates
-	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, "Hello World"))
+	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, 130, "Hello World"))
 	
 	//add listeners to key presses
 	var game = this;
@@ -56,25 +55,25 @@ Game.prototype.addListeners = function() {
 
         //check for right
         if(event.keyCode === 39) {
-        self.ship.x += 3;
+        self.ship.x += 10;
         console.log("swoosh")
         };
 
         //check for left
         if(event.keyCode === 37) {
-        	self.ship.x -=3;
+        	self.ship.x -=10;
         	console.log("schweee")
         };
 
         //check for up
         if(event.keyCode === 38) {
-        	self.ship.y -= 3;
+        	self.ship.y -= 10;
         	console.log("vroom")
     		};
 
     		//check for down
     		if(event.keyCode === 40) {
-    			self.ship.y += 3;
+    			self.ship.y += 10;
     			console.log("sqqueaaa")
     		};
 
@@ -97,11 +96,31 @@ Game.prototype.invaderCollisions = function() {
 	var self = this;
 		this.invaders.forEach(function(invader) {
 			self.ship.missileBay.forEach(function(missile){
-				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + 130 )) {
+				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.width )) {
 					self.invaders.pop(invader)
 				};
 			});
 		});
+};
+
+Game.prototype.invaderSlide = function () {
+	var self = this;
+	this.invaders.forEach(function(invader){
+		if (invader.x >= self.width - invader.width) {
+			invader.direction = "left"
+		};
+		if (invader.x <= 0) {
+			invader.direction = "right"
+		};
+		if(invader.direction === "right") { 
+			invader.x += 1
+		};
+		if(invader.direction == "left") {
+			invader.x -= 1
+		};
+		// debugger
+		
+	});
 };
 
 
@@ -132,6 +151,7 @@ Game.prototype.start = function() {
 		// console.log("Frames")
 		game.draw()
 		game.invaderCollisions();
+		game.invaderSlide();
 	}, 1000/ this.config.fps);
 
 };
@@ -195,12 +215,15 @@ function Missile(x,y) {
 
 
 
-function Invader(x,y, bodyText) {
+function Invader(x, y, width, bodyText) {
 	this.x = x;
 	this.y = y;
+	this.width = width
 	this.bodyText = bodyText;
-	
+	this.direction = "right"
 };
+
+
 
 
 
