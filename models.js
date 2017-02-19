@@ -15,8 +15,8 @@ function Game() {
 //will run the listeners for key strokes
 Game.prototype.initialize = function(gameBoardTag){
 
-	gameBoardTag.height = 800;
-	gameBoardTag.width = 700;
+	gameBoardTag.height = 1000;
+	gameBoardTag.width = 900;
 
 	this.gameBoard =gameBoardTag;
 	this.ctx = gameBoardTag.getContext("2d")
@@ -192,6 +192,7 @@ Game.prototype.start = function() {
 			} else if (game.stage === 2) {
 				game.wordsToInvaders("by Kevin Han");
 			} else if (game.stage === 3) {
+				game.wordsToInvaders("Has a love for practical and eye catching applications")
 			};
 		};
 
