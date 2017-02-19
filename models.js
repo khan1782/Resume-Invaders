@@ -249,7 +249,7 @@ function Ship(x,y) {
 	var self = this;
 
 	this.fire = function() {
-		self.missileBay.push(new Missile(self.x + 48, self.y));
+		self.missileBay.push(new Missile(self.x + 20, self.y));
 	};
 
 };
