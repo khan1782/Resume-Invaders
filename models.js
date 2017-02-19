@@ -14,8 +14,8 @@ function Game() {
 //will run the listeners for key strokes
 Game.prototype.initialize = function(gameBoardTag){
 
-	gameBoardTag.height = 600;
-	gameBoardTag.width = 550;
+	gameBoardTag.height = 800;
+	gameBoardTag.width = 700;
 
 	this.gameBoard =gameBoardTag;
 	this.ctx = gameBoardTag.getContext("2d")
@@ -37,7 +37,7 @@ Game.prototype.initialize = function(gameBoardTag){
 
 	//create new invader with coordinates
 	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, 60, "Hello"));
-	this.invaders.push(new Invader(this.defaultInvaderPosition.x + 65, this.defaultInvaderPosition.y, 60, "World"));
+	this.invaders.push(new Invader(this.defaultInvaderPosition.x + 65, this.defaultInvaderPosition.y, 65, "World"));
 	//add listeners to key presses
 	var game = this;
 	game.addListeners();
@@ -50,44 +50,62 @@ Game.prototype.addListeners = function() {
 	//save scope for reference
 	var self = this;
 
-		//set up listener for keydowns
-    document.addEventListener('keydown', function(event) {
+	//set up listener for keydowns
+  document.addEventListener('keydown', function(event) {
 
-        //check for right
-        if(event.keyCode === 39) {
-        self.ship.x += 10;
-        console.log("swoosh")
-        };
+    //check for right
+    if(event.keyCode === 39) {
 
-        //check for left
-        if(event.keyCode === 37) {
-        	self.ship.x -=10;
-        	console.log("schweee")
-        };
+    	//if the ship is too far right, do nothing, otherwise fly!
+    	if (self.ship.x > self.width -25) {
+    		console.log("EErrrr!")
+    	} else {
+    	self.ship.x += 10;
+    	console.log("swoosh")
+	    };
 
-        //check for up
-        if(event.keyCode === 38) {
-        	self.ship.y -= 10;
-        	console.log("vroom")
-    		};
+	  };
 
-    		//check for down
-    		if(event.keyCode === 40) {
-    			self.ship.y += 10;
-    			console.log("sqqueaaa")
-    		};
+    //check for left
+    if(event.keyCode === 37) {
+    	if (self.ship.x < 25) {
+    		console.log("Weeee")
+    	} else {
+    	self.ship.x -=10;
+    	console.log("schweee")
+    	};
+  	};
 
+    //check for up
+    if(event.keyCode === 38) {
+    	if (self.ship.y < 30) {
+    		console.log("woohh")
+    	} else {
+    	self.ship.y -= 10;
+    	console.log("vroom")
+			};
+		};
 
-    }, false);
+		//check for down
+		if(event.keyCode === 40) {
+			if (self.ship.y > self.height - 25) {
+				console.log("wreeeee")
+			} else {
+			self.ship.y += 10;
+			console.log("sqqueaaa")
+			};
+		};
 
-    document.addEventListener('keyup', function(event) {
+  	}, false);
 
-    		//check for space bar
-    		if(event.keyCode === 32) {
-    			console.log("pew");
-    			self.ship.fire()
-    		};
-    });
+  document.addEventListener('keyup', function(event) {
+
+  		//check for space bar
+  		if(event.keyCode === 32) {
+  			console.log("pew");
+  			self.ship.fire()
+  		};
+  });
 
 };
 
@@ -99,7 +117,6 @@ Game.prototype.invaderCollisions = function() {
 	for(var i=0; i < this.invaders.length; i++) {
 		var invader = self.invaders[i];
 		
-		
 	//iterate through missiles and compare each missle to given invader
 		for(var j=0; j < self.ship.missileBay.length; j++) {
 			var missile = self.ship.missileBay[j];
@@ -108,7 +125,7 @@ Game.prototype.invaderCollisions = function() {
 				self.invaders.splice(i--,1);
 			};
 		};
-	};
+	};       
 };
 
 Game.prototype.invaderSlide = function () {
@@ -117,10 +134,14 @@ Game.prototype.invaderSlide = function () {
 	//to through each invader and have them shift in a given direction based on their direction attribute
 	this.invaders.forEach(function(invader){
 		if (invader.x >= self.width - invader.width) {
-			invader.direction = "left"
+			self.invaders.forEach(function(invader) {
+				invader.direction = "left"
+			});
 		};
-		if (invader.x <= 0) {
-			invader.direction = "right"
+		if (invader.x <= 0) { 
+			self.invaders.forEach(function(invader) {
+				invader.direction = "right"
+			});
 		};
 		if(invader.direction === "right") { 
 			invader.x += 1
@@ -184,7 +205,6 @@ Game.prototype.draw = function() {
 		var currentInvader = this.invaders[i];
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
-	console.log(this.ship.missileBay.length)
 	//draw any missiles that have been shot out of the missile bay
 	for(var i=0; i < this.ship.missileBay.length; i++) {
  
