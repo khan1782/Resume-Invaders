@@ -36,8 +36,8 @@ Game.prototype.initialize = function(gameBoardTag){
 	this.defaultInvaderPosition = {x:this.width/3, y: this.height/6};
 
 	//create new invader with coordinates
-	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, 130, "Hello World"))
-	
+	this.invaders.push(new Invader(this.defaultInvaderPosition.x, this.defaultInvaderPosition.y, 60, "Hello"));
+	this.invaders.push(new Invader(this.defaultInvaderPosition.x + 65, this.defaultInvaderPosition.y, 60, "World"));
 	//add listeners to key presses
 	var game = this;
 	game.addListeners();
@@ -91,20 +91,30 @@ Game.prototype.addListeners = function() {
 
 };
 
-
+//function to wait and listen for any collisions
 Game.prototype.invaderCollisions = function() {
 	var self = this;
-		this.invaders.forEach(function(invader) {
-			self.ship.missileBay.forEach(function(missile){
-				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
-					self.invaders.pop(invader)
-				};
-			});
-		});
+
+	//iterate through invaders and compare each invader to each missle for collision
+	for(var i=0; i < this.invaders.length; i++) {
+		var invader = self.invaders[i];
+		
+		
+	//iterate through missiles and compare each missle to given invader
+		for(var j=0; j < self.ship.missileBay.length; j++) {
+			var missile = self.ship.missileBay[j];
+			if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
+				self.ship.missileBay.splice(j--, 1);
+				self.invaders.splice(i--,1);
+			};
+		};
+	};
 };
 
 Game.prototype.invaderSlide = function () {
 	var self = this;
+
+	//to through each invader and have them shift in a given direction based on their direction attribute
 	this.invaders.forEach(function(invader){
 		if (invader.x >= self.width - invader.width) {
 			invader.direction = "left"
@@ -118,8 +128,6 @@ Game.prototype.invaderSlide = function () {
 		if(invader.direction == "left") {
 			invader.x -= 1
 		};
-		// debugger
-		
 	});
 };
 
@@ -176,13 +184,18 @@ Game.prototype.draw = function() {
 		var currentInvader = this.invaders[i];
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
-
+	console.log(this.ship.missileBay.length)
 	//draw any missiles that have been shot out of the missile bay
 	for(var i=0; i < this.ship.missileBay.length; i++) {
  
-		//all missiles will always move foward
 		var currentMissile = self.ship.missileBay[i]
+		
+		//all missiles will always move foward
 		currentMissile.y -= 5
+		if (currentMissile.y < 0) {
+			console.log("good bye missile");
+      self.ship.missileBay.splice(i--, 1);
+		};
 		this.ctx.fillStyle="#ffffff";
 		this.ctx.fillRect(currentMissile.x, currentMissile.y, 2, 15);
 		};
