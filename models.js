@@ -263,8 +263,6 @@ function Missile(x,y) {
 };
 
 
-
-
 function Invader(x, y, width, bodyText) {
 	this.x = x;
 	this.y = y;
@@ -296,8 +294,4 @@ Game.prototype.wordsToInvaders = function(sentence) {
 	};
 
 };
-//feed something an array of words than iterate through
-//and create a new invader, but each invader's x position is the last invader's 
-//x position + that invader's width + buffer  
-
 
