@@ -244,7 +244,7 @@ function Ship(x,y) {
 	this.y = y;
 	this.x = x;
 	this.size = 16 ;
-	this.missileBay = [];
+	this.missileBay  =[];
 	this.image = document.getElementById("ship");
 	var self = this;
 
@@ -270,12 +270,6 @@ function Invader(x, y, width, bodyText) {
 	this.width = width
 	this.bodyText = bodyText;
 	this.direction = "right"
-};
-
-
-Game.prototype.stageOneInvaders = {
-	stage: 1,
-	newInvaders: []
 };
 
 
