@@ -8,6 +8,7 @@ function Starfield() {
 	this.maxVelocity = 85;
 	this.intervalId = 0;
 	this.stars = 100;
+	this.warpFactor = 1;
 };
 
 //take in div#stars-background and set div to window size
@@ -50,7 +51,12 @@ Starfield.prototype.start = function() {
 
 	//save starfield scope as self
 	var self = this;
-	//start a timer
+//start a timer
+	document.addEventListener('keyup', function(event) {
+		if(event.keyCode === 13) {
+			self.warpSpeed();
+		};
+	});
 	this.intervalId = setInterval(function() {
 		self.update();
 		self.draw();
@@ -62,7 +68,8 @@ function Star(x,y,size,velocity) {
 	this.x = x;
 	this.y = y;
 	this.size = size;
-	this.hyperspeed = 5;
+	this.tail = size;
+	this.hyperspeed = size;
 	this.velocity = velocity;
 };
 
@@ -93,7 +100,7 @@ Starfield.prototype.draw = function() {
 	ctx.fillStyle = "#ffffff";
 	for(var i=0; i<this.stars.length;i++) {
 		var star = this.stars[i];
-		ctx.fillRect(star.x, star.y, star.size, star.size)
+		ctx.fillRect(star.x, star.y, star.size, star.tail)
 	}
 
 	// //draw banner
@@ -103,3 +110,42 @@ Starfield.prototype.draw = function() {
 	// ctx.fillText(welcome, this.width/2.5 ,this.height/9);
 };
 
+
+
+Starfield.prototype.warpSpeed = function() {
+	console.log("warped")
+	var self = this;
+
+	this.speedUpStars();
+
+	setTimeout(function() {
+		self.revertStarSpeeds()
+	}, 3000);
+
+};
+
+Starfield.prototype.speedUpStars = function() {
+	// console.log(this.stars[0].velocity)
+	// console.log(this.stars[0].tail)
+
+	//future stars will have bigger tails
+
+	var self = this;
+	//current stars will have bigger tails and faster velocities
+	this.maxVelocity = 400;
+	this.stars.forEach(function(star) {
+		star.tail = 40;
+		star.velocity = 200;		
+	// }
+	});
+};
+
+Starfield.prototype.revertStarSpeeds = function() {
+	var self = this;
+	this.stars.forEach(function(star) {
+		console.log("arriving at destination")
+		star.tail = star.size;
+		// star.velocity = 85;
+	});
+	this.maxVelocity =85;
+};

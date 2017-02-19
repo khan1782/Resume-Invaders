@@ -121,6 +121,7 @@ Game.prototype.invaderCollisions = function() {
 		for(var j=0; j < self.ship.missileBay.length; j++) {
 			var missile = self.ship.missileBay[j];
 			if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
+				console.log("Hit!")
 				self.ship.missileBay.splice(j--, 1);
 				self.invaders.splice(i--,1);
 			};
@@ -213,7 +214,7 @@ Game.prototype.draw = function() {
 		//all missiles will always move foward
 		currentMissile.y -= 5
 		if (currentMissile.y < 0) {
-			console.log("good bye missile");
+			console.log("lost to depths of space");
       self.ship.missileBay.splice(i--, 1);
 		};
 		this.ctx.fillStyle="#ffffff";
@@ -266,3 +267,18 @@ function Invader(x, y, width, bodyText) {
 //set default locatio for an invader
 //create instance of invader
 //update game.populate to
+
+
+//hyperdrive
+//will need to change the starfields max velocity
+// will need to change star rectangle's size
+// //
+//     interval = setInterval(function() {
+//         countdownElement.firstChild.data = 'You can start your download in ' + (seconds - second) + ' seconds';
+//         if (second >= seconds) {
+//             downloadButton.style.display = 'block';
+//             clearInterval(interval);
+//         }
+
+//         second++;
+//     }, 1000);
