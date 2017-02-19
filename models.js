@@ -42,7 +42,7 @@ Game.prototype.initialize = function(gameBoardTag){
 	//add listeners to key presses
 	var game = this;
 	game.addListeners();
-
+	
 };
 
 //run inside of initialize function
@@ -93,6 +93,18 @@ Game.prototype.addListeners = function() {
 };
 
 
+Game.prototype.invaderCollisions = function() {
+	var self = this;
+		this.invaders.forEach(function(invader) {
+			self.ship.missileBay.forEach(function(missile){
+				if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + 130 )) {
+					self.invaders.pop(invader)
+				};
+			});
+		});
+};
+
+
 //populate convas with default ship and invader locations
 Game.prototype.populate = function(){
 
@@ -119,6 +131,7 @@ Game.prototype.start = function() {
 	this.intervalId = setInterval(function() { 
 		// console.log("Frames")
 		game.draw()
+		game.invaderCollisions();
 	}, 1000/ this.config.fps);
 
 };
@@ -141,7 +154,6 @@ Game.prototype.draw = function() {
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
-		console.log(currentInvader)
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
 
