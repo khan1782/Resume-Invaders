@@ -33,7 +33,7 @@ Game.prototype.initialize = function(gameBoardTag){
 	this.height = gameBoardTag.height;
 
 	//set default position for the ship
-	this.defaultShipPosition = {x: this.width/2.2, y: this.height/1.4};
+	this.defaultShipPosition = {x: this.width/2.2, y: this.height/1.3};
 
 	//create new ship with coordinates
 	this.ship = new Ship(this.defaultShipPosition.x, this.defaultShipPosition.y);
