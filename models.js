@@ -186,24 +186,6 @@ Game.prototype.invaderSlide = function () {
 };
 
 
-//populate convas with default ship and invader locations
-Game.prototype.populate = function(){
-
-	//Populate board with ship
-	this.ctx.fillStyle = "#ffffff";
-	this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);	
-
-	//populate board with invaders
-	for(var i=0; i < this.invaders.length; i++) {
-		var currentInvader = this.invaders[i];
-		this.ctx.font = "18px courier, sans-serif";
-		
-		this.ctx.fillStyle = "#ffffff";
-		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
-	};
-
-};
-
 
 //start the game current FPS
 Game.prototype.start = function() {
@@ -279,7 +261,8 @@ Game.prototype.draw = function() {
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
-		// this.ctx.font="30px Courier`"
+
+		this.ctx.fillStyle = "#ffffff";
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
 	//draw any missiles that have been shot out of the missile bay
