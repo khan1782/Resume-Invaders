@@ -3,6 +3,7 @@ function Game() {
 
 	this.ship;
 	this.invaders = [];
+	this.shrapnel = [];
 	this.stage = 0;
 	this.banner = "";
 	this.bannerWidth = this.banner.length*14;
@@ -157,12 +158,22 @@ Game.prototype.invaderCollisions = function() {
 			var missile = self.ship.missileBay[j];
 			if(missile.y > invader.y - 15 && missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
 				console.log("Hit!")
+
+				//over here create new shrapnel items
+				var letterArray = invader.bodyText.split('')
+				letterArray.forEach(function(shrap) {
+
+					self.shrapnel.push(new Shrapnel(invader.x, invader.y, shrap)) //x, y, text)    
+				});
+
 				self.ship.missileBay.splice(j--, 1);
 				self.invaders.splice(i--,1);
 			};
 		};
 	};       
 };
+
+
 
 Game.prototype.invaderSlide = function () {
 	var self = this;
@@ -266,6 +277,14 @@ Game.prototype.draw = function() {
 	//draw ship in it's location
 	this.ctx.drawImage(this.ship.image, this.ship.x, this.ship.y)
 
+	//draw shrapnel
+	for(var i=0; i < this.shrapnel.length; i++){
+		var currentShrapnel = this.shrapnel[i];
+		currentShrapnel.fly()
+		self.ctx.fillText( currentShrapnel.letter,currentShrapnel.x, currentShrapnel.y)
+	};
+
+
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
@@ -312,7 +331,7 @@ function Ship(x,y) {
 function Missile(x,y) {
 	this.x = x;
 	this.y = y;
-	this.velocity;
+	// this.velocity;
 	this.size;
 };
 
@@ -325,6 +344,19 @@ function Invader(x, y, width, bodyText) {
 	this.direction = "right";
 	this.shield = false;
 };
+
+function Shrapnel(x,y,letter){
+	this.x = x;
+	this.y = y;
+	this.letter = letter;
+	this.xFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1) 
+	this.yFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1)
+};
+
+Shrapnel.prototype.fly = function() {
+	this.x += this.xFly;
+	this.y += this.yFly;
+}
 
 //takes in a sentence, breaks it into an array, then creates an invader for each word
 Game.prototype.wordsToInvaders = function(sentence) {
@@ -354,7 +386,6 @@ Game.prototype.wordsToInvaders = function(sentence) {
 			var previousWord = arrayOfWords[i-1];
 			var previousWidth = (previousWord.length * 15)
 			trackLength += (previousWidth + 10)
-			// debugger
 			// console.log(trackLength)
 			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord));
 		};
@@ -370,3 +401,14 @@ Game.prototype.wordsToInvaders = function(sentence) {
 	};
 };
 
+
+
+
+
+
+
+// create shrapnel class x y letter =======
+// put shrapnel on the draw =========
+// create method to create shrapnel for each words
+// create method that moves shrapnel (need random coordinates)
+// create method that will delete shrapnel 
