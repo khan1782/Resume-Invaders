@@ -133,7 +133,7 @@ Game.prototype.multipleKeyStrokeDetection = function() {
 		};
 	};
 	if(this.keyStrokes.down === true) {
-		if (self.ship.y > self.height - 25) {
+		if (self.ship.y > self.height - 42) {
 			console.log("wreeeee")
 		} else {
 			self.ship.y += 7;
