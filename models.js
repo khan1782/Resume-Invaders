@@ -4,16 +4,20 @@ function Game() {
 	this.ship;
 	this.invaders = [];
 	this.stage = 0;
+	this.banner = "";
+	this.bannerWidth = this.banner.length*14;
 	this.config = {
 		fps: 50,
 		dt: (1/50)
 	};
+
 	this.keyStrokes = {
 		right: false,
 		left: false,
 		up: false,
 		down: false
 	};
+
 };
 
 
@@ -29,7 +33,6 @@ Game.prototype.initialize = function(gameBoardTag){
 
 	//set width and height
 	this.width = gameBoardTag.width;
-
 	this.height = gameBoardTag.height;
 
 	//set default position for the ship
@@ -40,7 +43,7 @@ Game.prototype.initialize = function(gameBoardTag){
 
 
 	//set default position for invader
-	this.defaultInvaderPosition = {x:this.width/3, y: this.height/6};
+	this.defaultInvaderPosition = {x:this.width/3, y: this.height/10};
 
 	//create new invader with coordinates
 	this.wordsToInvaders("Press Space to Begin!")
@@ -218,6 +221,8 @@ Game.prototype.start = function() {
 				game.wordsToInvaders("Javascript, HTML5, CSS")
 			} else if (game.stage === 7) {
 				game.wordsToInvaders("Email me at khan1782@gmail.com")
+			} else if (game.stage === 8) {
+				game.banner = "Email me at khan1782@gmail.com"
 			}
 		};
 
@@ -248,34 +253,39 @@ Game.prototype.powerDownShields = function() {
 
 //clears at the start and draws updated location ship or invaders
 Game.prototype.draw = function() {
+	//save scope for reference
+	var self = this;
 	
 	//clear board
 	this.ctx.clearRect(0, 0, this.width, this.height);
 
+	//draw banners
+	this.ctx.fillText(this.banner, (this.width/2)-(this.bannerWidth/2), this.height/3)
+
 	//draw ship in it's location
 	this.ctx.drawImage(this.ship.image, this.ship.x, this.ship.y)
-
-	//save scope for reference
-	var self = this;
 
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
-
 		this.ctx.fillStyle = "#ffffff";
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
+
 	//draw any missiles that have been shot out of the missile bay
 	for(var i=0; i < this.ship.missileBay.length; i++) {
- 
 		var currentMissile = self.ship.missileBay[i]
 		
 		//all missiles will always move foward
 		currentMissile.y -= 5
+
+		//if missile reaches top of the screen, delete it
 		if (currentMissile.y < 0) {
 			console.log("lost to depths of space");
       self.ship.missileBay.splice(i--, 1);
 		};
+
+		//ctx draw on canvas
 		this.ctx.fillStyle="#ffffff";
 		this.ctx.fillRect(currentMissile.x, currentMissile.y, 2, 15);
 		};
@@ -321,6 +331,7 @@ Game.prototype.wordsToInvaders = function(sentence) {
 	//starting point for first invader
 	var trackLength = 50
 	var barrierStart = trackLength;
+	var level = this.defaultInvaderPosition.y
 
 	var self = this;
 	this.ctx.font="18px Courier"
@@ -331,13 +342,6 @@ Game.prototype.wordsToInvaders = function(sentence) {
 		var currentWordWidth = (currentWord.length * 14)
 
 
-		//create barrier for the new invaders
-		for(var j=0; j< (currentWord.length/2);j++) {
-			newInvader =	new Invader(barrierStart, this.defaultInvaderPosition.y + 20, 18 , "__" );
-			newInvader.shield = true;
-			self.invaders.push(newInvader)
-			barrierStart += 30;
-		};
 
 		//edge case for first invader
 		if(i === 0) { 
@@ -353,6 +357,13 @@ Game.prototype.wordsToInvaders = function(sentence) {
 			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord));
 		};
 
+		//create barrier for the new invaders
+		for(var j=0; j< (currentWord.length/2);j++) {
+			newInvader =	new Invader(barrierStart, level + 20, 18 , "__" );
+			newInvader.shield = true;
+			self.invaders.push(newInvader)
+			barrierStart += 30;
+		};
 
 	};
 };

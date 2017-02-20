@@ -16,7 +16,7 @@ var canvas = document.getElementById("gameCanvas");
 var game = new Game;
 game.initialize(canvas);
 game.start();
-game.populate();
+
 
 });
    
