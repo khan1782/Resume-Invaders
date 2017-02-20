@@ -53,7 +53,7 @@ Starfield.prototype.start = function() {
 	var self = this;
 //start a timer
 	document.addEventListener('keyup', function(event) {
-		if(event.keyCode === 13) {
+		if(event.keyCode === 70) {
 			self.warpSpeed();
 		};
 	});
