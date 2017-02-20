@@ -163,7 +163,8 @@ Game.prototype.invaderCollisions = function() {
 				var letterArray = invader.bodyText.split('')
 				letterArray.forEach(function(shrap) {
 
-					self.shrapnel.push(new Shrapnel(invader.x, invader.y, shrap)) //x, y, text)    
+					self.shrapnel.push(new Shrapnel((invader.x +(invader.width)/2), invader.y, shrap)) //x, y, text) 
+
 				});
 
 				self.ship.missileBay.splice(j--, 1);
@@ -281,6 +282,7 @@ Game.prototype.draw = function() {
 	for(var i=0; i < this.shrapnel.length; i++){
 		var currentShrapnel = this.shrapnel[i];
 		currentShrapnel.fly()
+		self.ctx.fillStyle="#ede06f"
 		self.ctx.fillText( currentShrapnel.letter,currentShrapnel.x, currentShrapnel.y)
 	};
 
