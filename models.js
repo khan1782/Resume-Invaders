@@ -169,6 +169,7 @@ Game.prototype.invaderSlide = function () {
 
 	//to through each invader and have them shift in a given direction based on their direction attribute
 	this.invaders.forEach(function(invader){
+		invader.y += 0.5
 		if (invader.x >= self.width - invader.width) {
 			self.invaders.forEach(function(invader) {
 				invader.direction = "left"
@@ -359,11 +360,11 @@ Game.prototype.wordsToInvaders = function(sentence) {
 		};
 
 		//create barrier for the new invaders
-		for(var j=0; j< (currentWord.length/2);j++) {
-			newInvader =	new Invader(barrierStart, level + 20, 18 , "__" );
+		for(var j=0; j< (currentWord.length);j++) {
+			newInvader =	new Invader(barrierStart, level + 20, 9 , "_" );
 			newInvader.shield = true;
 			self.invaders.push(newInvader)
-			barrierStart += 30;
+			barrierStart += 15;
 		};
 
 	};
