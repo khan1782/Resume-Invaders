@@ -61,13 +61,11 @@ Game.prototype.addListeners = function() {
     //check for right
     if(event.keyCode === 39) {
     	self.keyStrokes.right = true;
-    	console.log("swoosh")
 	  };
 
     //check for left
     if(event.keyCode === 37) {
     	self.keyStrokes.left = true
-    	console.log("schweee");
     };
 
     //check for up
@@ -115,6 +113,7 @@ Game.prototype.multipleKeyStrokeDetection = function() {
 			console.log("schrweee");
 		} else {
 			self.ship.x += 7;
+			console.log("shwoooo")
 		};
 	};
 	if(this.keyStrokes.left === true) {
@@ -122,10 +121,12 @@ Game.prototype.multipleKeyStrokeDetection = function() {
     		console.log("Weeee");
     	} else {
     		self.ship.x -=7;
+    		console.log("vroooooo")
     	};
 	};
 	if(this.keyStrokes.up === true) {
 		if (self.ship.y < 30) {
+			console.log("sweeedd")
     } else {
     	self.ship.y -= 7;
     	console.log("vroom");
@@ -151,7 +152,7 @@ Game.prototype.invaderCollisions = function() {
 	//iterate through missiles and compare each missle to given invader
 		for(var j=0; j < self.ship.missileBay.length; j++) {
 			var missile = self.ship.missileBay[j];
-			if(missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
+			if(missile.y > invader.y - 15 && missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
 				console.log("Hit!")
 				self.ship.missileBay.splice(j--, 1);
 				self.invaders.splice(i--,1);
@@ -216,19 +217,44 @@ Game.prototype.start = function() {
 		game.invaderSlide();
 		game.multipleKeyStrokeDetection();
 
-		if (game.invaders.length === 0) {
+
+		if (game.ultimateTriumph()) {
+			game.powerDownShields()
 			game.stage += 1
 			if (game.stage === 1) {
+
 				game.wordsToInvaders("Resume Invaders: An Interactive Resume");
 			} else if (game.stage === 2) {
 				game.wordsToInvaders("by Kevin Han");
 			} else if (game.stage === 3) {
 				game.wordsToInvaders("Has a love for practical and eye catching applications")
+			} else if (game.stage === 4) {
+				game.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
 			};
 		};
 
 	}, 1000/ this.config.fps);
 
+};
+
+Game.prototype.ultimateTriumph = function() {
+	var invadersLeft = [];
+	var self = this;
+	this.invaders.forEach(function(invader){
+		if(invader.shield === false){
+			invadersLeft.push(invader)
+		};
+	});
+
+	if(invadersLeft.length === 0) {
+		return true;
+	} else {
+		return false;
+	};
+};
+
+Game.prototype.powerDownShields = function() {
+	this.invaders.splice(0,this.invaders.length);	
 };
 
 
@@ -239,11 +265,7 @@ Game.prototype.draw = function() {
 	this.ctx.clearRect(0, 0, this.width, this.height);
 
 	//draw ship in it's location
-	// console.log(this.ship.image)
-	// debugger
 	this.ctx.drawImage(this.ship.image, this.ship.x, this.ship.y)
-	// this.ctx.fillStyle = "#fffffff";
-	// this.ctx.fillRect(this.ship.x, this.ship.y, this.ship.size, this.ship.size);
 
 	//save scope for reference
 	var self = this;
@@ -297,32 +319,52 @@ function Missile(x,y) {
 function Invader(x, y, width, bodyText) {
 	this.x = x;
 	this.y = y;
-	this.width = width
+	this.width = width;
 	this.bodyText = bodyText;
-	this.direction = "right"
+	this.direction = "right";
+	this.shield = false;
 };
 
-
+//takes in a sentence, breaks it into an array, then creates an invader for each word
 Game.prototype.wordsToInvaders = function(sentence) {
 	arrayOfWords = sentence.split(" ");
+
+	//starting point for first invader
 	var trackLength = 50
+	var barrierStart = trackLength;
+
 	var self = this;
 	this.ctx.font="18px Futura"
 
+	//iterate through all words
 	for(var i=0; i < arrayOfWords.length; i++) {
 		var currentWord = arrayOfWords[i];
 		var currentWordWidth = (currentWord.length * 14)
+
+
+		//create barrier for the new invaders
+		for(var j=0; j< currentWord.length;j++) {
+			newInvader =	new Invader(barrierStart, this.defaultInvaderPosition.y + 20, 14 , "_" );
+			newInvader.shield = true;
+			self.invaders.push(newInvader)
+			barrierStart += 16;
+		};
+
+		//edge case for first invader
 		if(i === 0) { 
 			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord ));
+
+			//creates new invaders and defines their hit box
 		} else {
 			var previousWord = arrayOfWords[i-1];
-			var previousWidth = (previousWord.length * 14)
+			var previousWidth = (previousWord.length * 15)
 			trackLength += (previousWidth + 10)
 			// debugger
 			// console.log(trackLength)
 			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord));
 		};
-	};
 
+
+	};
 };
 
