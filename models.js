@@ -125,7 +125,7 @@ Game.prototype.multipleKeyStrokeDetection = function() {
     	};
 	};
 	if(this.keyStrokes.up === true) {
-		if (self.ship.y < 30) {
+		if (self.ship.y < self.height/2) {
 			console.log("sweeedd")
     } else {
     	self.ship.y -= 7;
@@ -196,7 +196,7 @@ Game.prototype.populate = function(){
 	//populate board with invaders
 	for(var i=0; i < this.invaders.length; i++) {
 		var currentInvader = this.invaders[i];
-		this.ctx.font = "bold 24px arial, sans-serif";
+		this.ctx.font = "18px courier, sans-serif";
 		
 		this.ctx.fillStyle = "#ffffff";
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
@@ -279,7 +279,7 @@ Game.prototype.draw = function() {
 	//draw any existing invaders
 	for(var i=0; i < this.invaders.length; i ++) {
 		var currentInvader = this.invaders[i];
-		this.ctx.font="30px Futura"
+		// this.ctx.font="30px Courier`"
 		this.ctx.fillText(currentInvader.bodyText, currentInvader.x, currentInvader.y)
 	};
 	//draw any missiles that have been shot out of the missile bay
@@ -340,7 +340,7 @@ Game.prototype.wordsToInvaders = function(sentence) {
 	var barrierStart = trackLength;
 
 	var self = this;
-	this.ctx.font="18px Futura"
+	this.ctx.font="18px Courier"
 
 	//iterate through all words
 	for(var i=0; i < arrayOfWords.length; i++) {
@@ -349,11 +349,11 @@ Game.prototype.wordsToInvaders = function(sentence) {
 
 
 		//create barrier for the new invaders
-		for(var j=0; j< currentWord.length;j++) {
-			newInvader =	new Invader(barrierStart, this.defaultInvaderPosition.y + 20, 14 , "_" );
+		for(var j=0; j< (currentWord.length/2);j++) {
+			newInvader =	new Invader(barrierStart, this.defaultInvaderPosition.y + 20, 18 , "__" );
 			newInvader.shield = true;
 			self.invaders.push(newInvader)
-			barrierStart += 16;
+			barrierStart += 30;
 		};
 
 		//edge case for first invader
