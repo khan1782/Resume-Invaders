@@ -230,7 +230,13 @@ Game.prototype.start = function() {
 				game.wordsToInvaders("Has a love for practical and eye catching applications")
 			} else if (game.stage === 4) {
 				game.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
-			};
+			} else if (game.stage === 5) {
+				game.wordsToInvaders("Experienced in Ruby on Rails")
+			} else if (game.stage === 6) {
+				game.wordsToInvaders("Javascript, HTML5, CSS")
+			} else if (game.stage === 7) {
+				game.wordsToInvaders("Email me at khan1782@gmail.com")
+			}
 		};
 
 	}, 1000/ this.config.fps);
