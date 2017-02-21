@@ -228,6 +228,7 @@ Game.prototype.stages = function() {
 				this.ship.numCannons = 2;
 				this.wordsToInvaders("Resume Invaders: An Interactive Resume");
 			} else if (this.stage === 2) {
+				this.ship.numCannons = 3;
 				this.wordsToInvaders("by Kevin Han");
 			} else if (this.stage === 3) {
 				this.wordsToInvaders("Has a love for practical and eye catching applications")
@@ -306,8 +307,8 @@ Game.prototype.draw = function() {
 		var currentMissile = self.ship.missileBay[i]
 		
 		//all missiles will always move foward
-		currentMissile.y -= currentMissile.direction.y
-		currentMissile.x -= currentMissile.direction.x
+		currentMissile.y -= currentMissile.yFly;
+		currentMissile.x -= currentMissile.xFly;
 
 		//if missile reaches top of the screen, delete it
 		if (currentMissile.y < 0) {
@@ -336,23 +337,25 @@ function Ship(x,y) {
 Ship.prototype.fire = function(numCannons) {
 
 	if (numCannons === 1){
-		this.missileBay.push(new Missile(this.x + 20, this.y));
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,5));
 	} else if (numCannons === 2){
-		this.missileBay.push(new Missile(this.x + 5, this.y));
-		this.missileBay.push(new Missile(this.x + 35, this.y));
-	}
+		this.missileBay.push(new Missile(this.x + 5, this.y,0,5));
+		this.missileBay.push(new Missile(this.x + 35, this.y,0,5));
+	} else if (numCannons === 3) {
+		this.missileBay.push(new Missile(this.x + 10, this.y,1,5));
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,5));
+		this.missileBay.push(new Missile(this.x + 30, this.y,-1,5));
+	};
 };
 
-function Missile(x,y) {
+function Missile(x,y, xFly, yFly) {
 	
 	this.x = x;
 	this.y = y;
 	// this.velocity;
 	this.size;
-	this.direction = {
-		x:0,
-		y:5
-	};
+	this.xFly = xFly;
+	this.yFly = yFly;
 };
 
 
@@ -370,8 +373,8 @@ function Shrapnel(x,y,letter, game){
 	this.y = y;
 	this.letter = letter;
 	this.game = game;
-	this.xFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1) 
-	this.yFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1)
+	this.xFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1) 
+	this.yFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1)
 	this.persistence = (Math.floor(Math.random()*3))
 	this.destructionTimer()
 };
