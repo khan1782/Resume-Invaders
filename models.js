@@ -344,7 +344,7 @@ Ship.prototype.fire = function(numCannons) {
 	} else if (numCannons === 2){
 		this.missileBay.push(new Missile(this.x + 5, this.y,0,7));
 		this.missileBay.push(new Missile(this.x + 35, this.y,0,7));
-	} else if (numCannons === 3) {
+	} else if (numCannons === 3) 
 		this.missileBay.push(new Missile(this.x + 10, this.y,0.5,7));
 		this.missileBay.push(new Missile(this.x + 20, this.y,0,7));
 		this.missileBay.push(new Missile(this.x + 30, this.y,-0.5,7));
@@ -354,6 +354,7 @@ Ship.prototype.fire = function(numCannons) {
 		this.missileBay.push(new Missile(this.x + 25, this.y,-0.2,7));
 		this.missileBay.push(new Missile(this.x + 35, this.y,-0.5,7));
 	}
+
 };
 
 function Missile(x,y, xFly, yFly) {
