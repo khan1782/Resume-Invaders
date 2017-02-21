@@ -90,7 +90,7 @@ Game.prototype.addListeners = function() {
 		//check for space bar
 		if(event.keyCode === 32) {
 			console.log("pew");
-			self.ship.fire()
+			self.ship.fire(self.ship.numCannons)
 		};
 
   	//check for right
@@ -162,11 +162,8 @@ Game.prototype.invaderCollisions = function() {
 				//over here create new shrapnel items
 				var letterArray = invader.bodyText.split('')
 				letterArray.forEach(function(shrap) {
-
 					self.shrapnel.push(new Shrapnel((invader.x +(invader.width)/2), invader.y, shrap, self)) //x, y, text) 
-
 				});
-
 				self.ship.missileBay.splice(j--, 1);
 				self.invaders.splice(i--,1);
 			};
@@ -214,34 +211,45 @@ Game.prototype.start = function() {
 		game.invaderCollisions();
 		game.invaderSlide();
 		game.multipleKeyStrokeDetection();
-
-
-		if (game.ultimateTriumph()) {
-			game.powerDownShields()
-			game.stage += 1
-			if (game.stage === 1) {
-
-				game.wordsToInvaders("Resume Invaders: An Interactive Resume");
-			} else if (game.stage === 2) {
-				game.wordsToInvaders("by Kevin Han");
-			} else if (game.stage === 3) {
-				game.wordsToInvaders("Has a love for practical and eye catching applications")
-			} else if (game.stage === 4) {
-				game.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
-			} else if (game.stage === 5) {
-				game.wordsToInvaders("Experienced in Ruby on Rails")
-			} else if (game.stage === 6) {
-				game.wordsToInvaders("Javascript, HTML5, CSS")
-			} else if (game.stage === 7) {
-				game.wordsToInvaders("Email me at khan1782@gmail.com")
-			} else if (game.stage === 8) {
-				game.banner = "Email me at khan1782@gmail.com"
-			}
-		};
+		game.stages();
 
 	}, 1000/ this.config.fps);
 
 };
+
+Game.prototype.stages = function() {
+
+		if (this.ultimateTriumph()) {
+			this.powerDownShields()
+			this.stage += 1
+
+
+			if (this.stage === 1) {
+				this.ship.numCannons = 2;
+				this.wordsToInvaders("Resume Invaders: An Interactive Resume");
+			} else if (this.stage === 2) {
+				this.ship.numCannons = 3;
+				this.wordsToInvaders("by Kevin Han");
+			} else if (this.stage === 3) {
+				this.wordsToInvaders("Has a love for practical and eye catching applications")
+			} else if (this.stage === 4) {
+				this.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
+			} else if (this.stage === 5) {
+				this.wordsToInvaders("Experienced in Ruby on Rails")
+			} else if (this.stage === 6) {
+				this.wordsToInvaders("Javascript, HTML5, CSS")
+			} else if (this.stage === 7) {
+				this.wordsToInvaders("Email me at khan1782@gmail.com")
+			} else if (this.stage === 8) {
+				this.banner = "Email me at khan1782@gmail.com"
+			}
+		};
+
+};
+
+
+
+
 
 Game.prototype.ultimateTriumph = function() {
 	var invadersLeft = [];
@@ -299,7 +307,8 @@ Game.prototype.draw = function() {
 		var currentMissile = self.ship.missileBay[i]
 		
 		//all missiles will always move foward
-		currentMissile.y -= 5
+		currentMissile.y -= currentMissile.yFly;
+		currentMissile.x -= currentMissile.xFly;
 
 		//if missile reaches top of the screen, delete it
 		if (currentMissile.y < 0) {
@@ -320,21 +329,33 @@ function Ship(x,y) {
 	this.x = x;
 	this.size = 16 ;
 	this.missileBay  =[];
+	this.numCannons = 1;
 	this.image = document.getElementById("ship");
-	var self = this;
-
-	this.fire = function() {
-		self.missileBay.push(new Missile(self.x + 5, self.y));
-		self.missileBay.push(new Missile(self.x + 35, self.y));
-	};
 
 };
 
-function Missile(x,y) {
+Ship.prototype.fire = function(numCannons) {
+
+	if (numCannons === 1){
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,5));
+	} else if (numCannons === 2){
+		this.missileBay.push(new Missile(this.x + 5, this.y,0,5));
+		this.missileBay.push(new Missile(this.x + 35, this.y,0,5));
+	} else if (numCannons === 3) {
+		this.missileBay.push(new Missile(this.x + 10, this.y,1,5));
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,5));
+		this.missileBay.push(new Missile(this.x + 30, this.y,-1,5));
+	};
+};
+
+function Missile(x,y, xFly, yFly) {
+	
 	this.x = x;
 	this.y = y;
 	// this.velocity;
 	this.size;
+	this.xFly = xFly;
+	this.yFly = yFly;
 };
 
 
@@ -352,8 +373,8 @@ function Shrapnel(x,y,letter, game){
 	this.y = y;
 	this.letter = letter;
 	this.game = game;
-	this.xFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1) 
-	this.yFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1)
+	this.xFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1) 
+	this.yFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1)
 	this.persistence = (Math.floor(Math.random()*3))
 	this.destructionTimer()
 };
@@ -364,7 +385,6 @@ Shrapnel.prototype.destructionTimer = function() {
 	console.log(game.shrapnel.length)
 	setTimeout(function() {
 		var shrapIndex = game.shrapnel.indexOf(shrap);
-		console.log(shrapIndex);
 		game.shrapnel.splice(shrap,1);
 	}, 500*shrap.persistence);
 };
