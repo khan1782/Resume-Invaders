@@ -237,6 +237,8 @@ Game.prototype.stages = function() {
 			} else if (this.stage === 4) {
 				this.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
 			} else if (this.stage === 5) {
+				this.numBarriers =3;
+				this.ship.numCannons = 4;
 				this.wordsToInvaders("Experienced in Ruby on Rails")
 			} else if (this.stage === 6) {
 				this.wordsToInvaders("Javascript, HTML5, CSS")
@@ -314,7 +316,6 @@ Game.prototype.draw = function() {
 
 		//if missile reaches top of the screen, delete it
 		if (currentMissile.y < 0) {
-			
       self.ship.missileBay.splice(i--, 1);
 		};
 
@@ -343,11 +344,17 @@ Ship.prototype.fire = function(numCannons) {
 	} else if (numCannons === 2){
 		this.missileBay.push(new Missile(this.x + 5, this.y,0,7));
 		this.missileBay.push(new Missile(this.x + 35, this.y,0,7));
-	} else if (numCannons === 3) {
-		this.missileBay.push(new Missile(this.x + 10, this.y,1,7));
+	} else if (numCannons === 3) 
+		this.missileBay.push(new Missile(this.x + 10, this.y,0.5,7));
 		this.missileBay.push(new Missile(this.x + 20, this.y,0,7));
-		this.missileBay.push(new Missile(this.x + 30, this.y,-1,7));
-	};
+		this.missileBay.push(new Missile(this.x + 30, this.y,-0.5,7));
+	} else if (numCannons ===4){
+		this.missileBay.push(new Missile(this.x + 5, this.y,0.5,7));
+		this.missileBay.push(new Missile(this.x + 15, this.y,0.2,7));
+		this.missileBay.push(new Missile(this.x + 25, this.y,-0.2,7));
+		this.missileBay.push(new Missile(this.x + 35, this.y,-0.5,7));
+	}
+
 };
 
 function Missile(x,y, xFly, yFly) {
