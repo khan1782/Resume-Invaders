@@ -7,6 +7,7 @@ function Game() {
 	this.stage = 0;
 	this.banner = "";
 	this.bannerWidth = this.banner.length*14;
+	this.numBarriers = 1;
 	this.config = {
 		fps: 50,
 		dt: (1/50)
@@ -89,7 +90,7 @@ Game.prototype.addListeners = function() {
 
 		//check for space bar
 		if(event.keyCode === 32) {
-			console.log("pew");
+			
 			self.ship.fire(self.ship.numCannons)
 		};
 
@@ -114,34 +115,34 @@ Game.prototype.multipleKeyStrokeDetection = function() {
 	var self = this;
 	if(this.keyStrokes.right === true) {
 		if (self.ship.x > self.width -55) {
-			console.log("schrweee");
+			
 		} else {
 			self.ship.x += 7;
-			console.log("shwoooo")
+			
 		};
 	};
 	if(this.keyStrokes.left === true) {
 		if(self.ship.x < 25) {
-    		console.log("Weeee");
+    		
     	} else {
     		self.ship.x -=7;
-    		console.log("vroooooo")
+    		
     	};
 	};
 	if(this.keyStrokes.up === true) {
 		if (self.ship.y < self.height/2) {
-			console.log("sweeedd")
+			
     } else {
     	self.ship.y -= 7;
-    	console.log("vroom");
+    	
 		};
 	};
 	if(this.keyStrokes.down === true) {
 		if (self.ship.y > self.height - 42) {
-			console.log("wreeeee")
+			
 		} else {
 			self.ship.y += 7;
-			console.log("sqqueaaa")
+			
 		};
 	}
 };
@@ -157,7 +158,7 @@ Game.prototype.invaderCollisions = function() {
 		for(var j=0; j < self.ship.missileBay.length; j++) {
 			var missile = self.ship.missileBay[j];
 			if(missile.y > invader.y - 15 && missile.y < invader.y && (missile.x > invader.x && missile.x < invader.x + invader.width )) {
-				console.log("Hit!")
+				
 
 				//over here create new shrapnel items
 				var letterArray = invader.bodyText.split('')
@@ -206,7 +207,7 @@ Game.prototype.start = function() {
 	// start the game loop
 	var game = this;
 	this.intervalId = setInterval(function() { 
-		// console.log("Frames")
+		// 
 		game.draw()
 		game.invaderCollisions();
 		game.invaderSlide();
@@ -229,11 +230,15 @@ Game.prototype.stages = function() {
 				this.wordsToInvaders("Resume Invaders: An Interactive Resume");
 			} else if (this.stage === 2) {
 				this.wordsToInvaders("by Kevin Han");
+				this.numBarriers =2;
 			} else if (this.stage === 3) {
+				this.ship.numCannons = 3;
 				this.wordsToInvaders("Has a love for practical and eye catching applications")
 			} else if (this.stage === 4) {
 				this.wordsToInvaders("Thinks programs should be equally intuitive and beautiful")
 			} else if (this.stage === 5) {
+				this.numBarriers =3;
+				this.ship.numCannons = 4;
 				this.wordsToInvaders("Experienced in Ruby on Rails")
 			} else if (this.stage === 6) {
 				this.wordsToInvaders("Javascript, HTML5, CSS")
@@ -306,12 +311,11 @@ Game.prototype.draw = function() {
 		var currentMissile = self.ship.missileBay[i]
 		
 		//all missiles will always move foward
-		currentMissile.y -= currentMissile.direction.y
-		currentMissile.x -= currentMissile.direction.x
+		currentMissile.y -= currentMissile.yFly;
+		currentMissile.x -= currentMissile.xFly;
 
 		//if missile reaches top of the screen, delete it
 		if (currentMissile.y < 0) {
-			console.log("lost to depths of space");
       self.ship.missileBay.splice(i--, 1);
 		};
 
@@ -336,23 +340,30 @@ function Ship(x,y) {
 Ship.prototype.fire = function(numCannons) {
 
 	if (numCannons === 1){
-		this.missileBay.push(new Missile(this.x + 20, this.y));
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,7));
 	} else if (numCannons === 2){
-		this.missileBay.push(new Missile(this.x + 5, this.y));
-		this.missileBay.push(new Missile(this.x + 35, this.y));
+		this.missileBay.push(new Missile(this.x + 5, this.y,0,7));
+		this.missileBay.push(new Missile(this.x + 35, this.y,0,7));
+	} else if (numCannons === 3) {
+		this.missileBay.push(new Missile(this.x + 10, this.y,0.5,7));
+		this.missileBay.push(new Missile(this.x + 20, this.y,0,7));
+		this.missileBay.push(new Missile(this.x + 30, this.y,-0.5,7));
+	} else if (numCannons ===4){
+		this.missileBay.push(new Missile(this.x + 5, this.y,0.5,7));
+		this.missileBay.push(new Missile(this.x + 15, this.y,0.2,7));
+		this.missileBay.push(new Missile(this.x + 25, this.y,-0.2,7));
+		this.missileBay.push(new Missile(this.x + 35, this.y,-0.5,7));
 	}
 };
 
-function Missile(x,y) {
+function Missile(x,y, xFly, yFly) {
 	
 	this.x = x;
 	this.y = y;
 	// this.velocity;
 	this.size;
-	this.direction = {
-		x:0,
-		y:5
-	};
+	this.xFly = xFly;
+	this.yFly = yFly;
 };
 
 
@@ -370,8 +381,8 @@ function Shrapnel(x,y,letter, game){
 	this.y = y;
 	this.letter = letter;
 	this.game = game;
-	this.xFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1) 
-	this.yFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1)
+	this.xFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1) 
+	this.yFly = (Math.floor(Math.random()*5)) * (Math.round(Math.random()) * 2 - 1)
 	this.persistence = (Math.floor(Math.random()*3))
 	this.destructionTimer()
 };
@@ -379,7 +390,7 @@ function Shrapnel(x,y,letter, game){
 Shrapnel.prototype.destructionTimer = function() {
 	var game = this.game;
 	var shrap = this;
-	console.log(game.shrapnel.length)
+	
 	setTimeout(function() {
 		var shrapIndex = game.shrapnel.indexOf(shrap);
 		game.shrapnel.splice(shrap,1);
@@ -419,15 +430,17 @@ Game.prototype.wordsToInvaders = function(sentence) {
 			var previousWord = arrayOfWords[i-1];
 			var previousWidth = (previousWord.length * 15)
 			trackLength += (previousWidth + 10)
-			// console.log(trackLength)
+			// 
 			self.invaders.push(new Invader(trackLength, this.defaultInvaderPosition.y, currentWordWidth, currentWord));
 		};
 
 		//create barrier for the new invaders
 		for(var j=0; j< (currentWord.length);j++) {
-			newInvader =	new Invader(barrierStart, level + 20, 9 , "_" );
-			newInvader.shield = true;
-			self.invaders.push(newInvader)
+			for(var k=0; k < self.numBarriers; k++) {
+				newInvader =	new Invader(barrierStart, level + (self.numBarriers*20), 9*self.numBarriers , "_".repeat(self.numBarriers) );
+				newInvader.shield = true;
+				self.invaders.push(newInvader);
+			}
 			barrierStart += 15;
 		};
 
