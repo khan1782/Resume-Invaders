@@ -163,7 +163,7 @@ Game.prototype.invaderCollisions = function() {
 				var letterArray = invader.bodyText.split('')
 				letterArray.forEach(function(shrap) {
 
-					self.shrapnel.push(new Shrapnel((invader.x +(invader.width)/2), invader.y, shrap)) //x, y, text) 
+					self.shrapnel.push(new Shrapnel((invader.x +(invader.width)/2), invader.y, shrap, self)) //x, y, text) 
 
 				});
 
@@ -347,12 +347,26 @@ function Invader(x, y, width, bodyText) {
 	this.shield = false;
 };
 
-function Shrapnel(x,y,letter){
+function Shrapnel(x,y,letter, game){
 	this.x = x;
 	this.y = y;
 	this.letter = letter;
+	this.game = game;
 	this.xFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1) 
 	this.yFly = (Math.floor(Math.random()*20)) * (Math.round(Math.random()) * 2 - 1)
+	this.persistence = (Math.floor(Math.random()*3))
+	this.destructionTimer()
+};
+
+Shrapnel.prototype.destructionTimer = function() {
+	var game = this.game;
+	var shrap = this;
+	console.log(game.shrapnel.length)
+	setTimeout(function() {
+		var shrapIndex = game.shrapnel.indexOf(shrap);
+		console.log(shrapIndex);
+		game.shrapnel.splice(shrap,1);
+	}, 500*shrap.persistence);
 };
 
 Shrapnel.prototype.fly = function() {
